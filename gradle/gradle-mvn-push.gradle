@@ -26,65 +26,76 @@ def getRepositoryPassword() {
     return hasProperty('SONATYPE_NEXUS_PASSWORD') ? SONATYPE_NEXUS_PASSWORD : ""
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                groupId GROUP
-                artifactId POM_ARTIFACT_ID
-                version VERSION_NAME
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    archiveClassifier.set("sources")
+}
 
-                artifact("$buildDir/libs/${project.getName()}-${version}.jar")
+// task javadocs(type: Javadoc) {
+//     source = sourceSets.main.allSource
+// }
+//
+// task javadocsJar(type: Javadoc, dependsOn: javadocs) {
+//     from javadoc.destinationDir
+//     archiveClassifier.set("javadoc")
+// }
 
-                pom {
-                    name = POM_ARTIFACT_ID
-                    description = POM_DESCRIPTION
-                    url = POM_URL
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId GROUP
+            artifactId POM_ARTIFACT_ID
+            version VERSION_NAME
 
-                    licenses {
-                        license {
-                            name = POM_LICENSE_NAME
-                            url = POM_LICENSE_URL
-                            distribution = POM_LICENSE_DIST
-                        }
-                    }
+            // artifact "$buildDir/libs/${project.getName()}-${version}.jar"
+            artifact sourcesJar
+            // artifact javadocsJar
 
-                    developers {
-                        developer {
-                            id = POM_DEVELOPER_ID
-                            name = POM_DEVELOPER_NAME
-                        }
-                    }
+            pom {
+                name = POM_ARTIFACT_ID
+                description = POM_DESCRIPTION
+                url = POM_URL
 
-                    scm {
-                        url = POM_SCM_URL
-                        connection = POM_SCM_CONNECTION
-                        developerConnection = POM_SCM_DEV_CONNECTION
+                licenses {
+                    license {
+                        name = POM_LICENSE_NAME
+                        url = POM_LICENSE_URL
+                        distribution = POM_LICENSE_DIST
                     }
                 }
-            }
-        }
 
-        // The repository to publish to, Sonatype/MavenCentral
-        repositories {
-            maven {
-                // This is an arbitrary name, you may also use "mavencentral" or
-                // any other name that's descriptive for you
-                name = "sonatype"
-                url = isReleaseBuild() ? getReleaseRepositoryUrl() : getSnapshotRepositoryUrl()
-                credentials {
-                    username getRepositoryUsername()
-                    password getRepositoryPassword()
+                developers {
+                    developer {
+                        id = POM_DEVELOPER_ID
+                        name = POM_DEVELOPER_NAME
+                    }
+                }
+
+                scm {
+                    url = POM_SCM_URL
+                    connection = POM_SCM_CONNECTION
+                    developerConnection = POM_SCM_DEV_CONNECTION
                 }
             }
         }
     }
 
-    signing {
-        required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
-        println("required? $required")
+    // The repository to publish to, Sonatype/MavenCentral
+    repositories {
+        maven {
+            name = "sonatype"
+            url = isReleaseBuild() ? getReleaseRepositoryUrl() : getSnapshotRepositoryUrl()
+            credentials {
+                username getRepositoryUsername()
+                password getRepositoryPassword()
+            }
+        }
+    }
+}
+
+signing {
+    required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
 //        useGpgCmd()
 //        sign publishing.publications
-        sign configurations.archives
-    }
+    sign configurations.archives
 }
