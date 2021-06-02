@@ -9,8 +9,8 @@ buildscript {
 }
 
 allprojects {
-    group = "dev.petitjam"
-    version = "1.0-SNAPSHOT"
+    group = project.property("GROUP")!!
+    version = project.property("VERSION_NAME")!!
 
     repositories {
         mavenCentral()

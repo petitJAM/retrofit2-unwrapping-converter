@@ -3,6 +3,8 @@ plugins {
     `java-library`
 }
 
+apply(from = "../gradle/gradle-mvn-push.gradle")
+
 repositories {
     mavenCentral()
 }
