@@ -1,0 +1,7 @@
+SONATYPE_NEXUS_USERNAME=
+SONATYPE_NEXUS_PASSWORD=
+
+signing.gnupg.executable=
+signing.gnupg.keyName=
+signing.gnupg.passphrase=
+
