@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.load.kotlin.signatures
-
 plugins {
     id("org.jetbrains.kotlin.jvm")
     `java-library`
