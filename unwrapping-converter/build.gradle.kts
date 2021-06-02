@@ -18,6 +18,11 @@ dependencies {
     api("com.squareup.moshi:moshi:1.12.0")
 }
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
