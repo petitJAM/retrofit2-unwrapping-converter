@@ -10,6 +10,11 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.IOException
 import java.lang.reflect.Type
 
+/**
+ * A [Converter.Factory] which generates a [Converter] that unwraps the JSON response data.
+ *
+ *
+ */
 class UnwrappingConverterFactory(
     private val moshiConverterFactory: MoshiConverterFactory,
 ) : Converter.Factory() {
